@@ -77,7 +77,7 @@ class Queue:
         return duplicate     
     
     def _check_dependencies_duplicate(self, task: TaskSubmission, item_dependencies: list[TaskSubmission]) -> list[TaskSubmission]:
-        for index, item in enumerate(item_dependencies):
+        for index, item in enumerate(item_dependencies[:]):
             duplicate = self._check_duplicate(item)
             if duplicate:
                 print(f"Dependency duplicate {duplicate}")
@@ -299,6 +299,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
