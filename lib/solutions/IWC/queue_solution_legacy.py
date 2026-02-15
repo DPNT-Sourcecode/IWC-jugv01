@@ -52,7 +52,6 @@ class Queue:
         self._queue = []
 
     def _collect_dependencies(self, task: TaskSubmission) -> list[TaskSubmission]:
-        print("_collect_dependencies")
         provider = next((p for p in REGISTERED_PROVIDERS if p.name == task.provider), None)
         if provider is None:
             return []
@@ -74,32 +73,7 @@ class Queue:
             (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
             None
         )
-        print(f"Duplicate {duplicate}")
-        return duplicate
-
-    def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
-        tasks = [x for x in self._queue]
-        print("About to get the duplicate value")
-        
-        duplicate = next(
-            (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
-            None
-        )
-        print(f"Duplicate {duplicate}")
-
-        if duplicate is not None:
-            old_item_date = duplicate.timestamp
-            new_item_date = item.timestamp
-
-            print(f"Exising timestamp {old_item_date}")
-            print(f"New timestamp {new_item_date}")
-
-            if old_item_date > new_item_date:
-                print("New is older")
-                tasks.remove(duplicate)
-
-        return tasks
-                
+        return duplicate     
 
     @staticmethod
     def _priority_for_task(task):
@@ -130,15 +104,10 @@ class Queue:
         duplicate = self._check_duplicate(item)
         if duplicate:
             existing_queue = self._queue
-            print("Going to remove the duplicate now")
             old_item_date = duplicate.timestamp
             new_item_date = item.timestamp
 
-            print(f"Exising timestamp {old_item_date}")
-            print(f"New timestamp {new_item_date}")
-
             if old_item_date > new_item_date:
-                print("New is older")
                 existing_queue.remove(duplicate)
             else:
                 return self.size
