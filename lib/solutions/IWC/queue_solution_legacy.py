@@ -67,6 +67,13 @@ class Queue:
             tasks.append(dependency_task)
         return tasks
     
+    def _check_duplicate(self, item:TaskSubmission) -> bool:
+        duplicate = any(
+            task.user_id == item.user_id and task.provider == item.provider,
+            for task in tasks
+        )
+        print(f"Duplicate {duplicate}")
+
     def _resolve_duplicates(self, item: TaskSubmission) -> TaskSubmission:
         tasks = self._queue
         
@@ -269,6 +276,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
