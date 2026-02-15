@@ -76,7 +76,7 @@ class Queue:
         print(f"Duplicate {duplicate}")
         return duplicate
 
-    def _resolve_duplicates(self, item: TaskSubmission) -> TaskSubmission:
+    def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
         tasks = self._queue
         
         duplicate = next(
@@ -85,6 +85,8 @@ class Queue:
         )
         print(f"Duplicate {duplicate}")
 
+        keeper = None
+
         if duplicate is not None:
             old_item_date = duplicate.timestamp
             new_item_date = item.timestamp
@@ -92,14 +94,11 @@ class Queue:
             print(f"Exising timestamp {old_item_date}")
             print(f"New timestamp {new_item_date}")
 
-            if old_item_date < new_item_date:
-                print("Existing is older")
-                return duplicate
-            else: 
+            if old_item_date > new_item_date:
                 print("New is older")
-                return item
+                self._queue.remove(duplicate)
 
-        return item
+        return self._queue
                 
 
     @staticmethod
@@ -126,8 +125,9 @@ class Queue:
         return timestamp
 
     def enqueue(self, item: TaskSubmission) -> int:
-        task = self._resolve_duplicates(item)
         tasks = [*self._collect_dependencies(item), item]
+        if self._check_duplicate:
+            tasks = self._resolve_duplicates
 
         for task in tasks:
             metadata = task.metadata
@@ -278,3 +278,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
