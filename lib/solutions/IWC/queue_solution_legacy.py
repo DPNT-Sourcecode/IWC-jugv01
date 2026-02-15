@@ -82,13 +82,15 @@ class Queue:
             if duplicate:
                 print(f"Dependency duplicate {duplicate}")
                 old_item_date = duplicate.timestamp
+                print(f"Existing item time {old_item_date}")
                 new_item_date = task.timestamp
+                print(f"New item time {new_item_date}")
 
-                if old_item_date > new_item_date:
-                    print("Existing item is older")
+                if old_item_date < new_item_date:
+                    print("Updating dependency to new timestamp")
                     item_dependencies[index].timestamp = task.timestamp
                 else:
-                    print("New item is older")
+                    print("New item with dependencies timestamp")
                     task.timestamp = duplicate.timestamp
         
         return task, item_dependencies
@@ -293,4 +295,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
