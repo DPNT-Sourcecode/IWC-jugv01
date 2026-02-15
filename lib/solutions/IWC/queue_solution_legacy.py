@@ -77,6 +77,7 @@ class Queue:
         return duplicate     
     
     def _check_dependencies_duplicate(self, task: TaskSubmission, item_dependencies: list[TaskSubmission]) -> list[TaskSubmission]:
+        print("Dependencies START")
         for index, item in enumerate(item_dependencies[:]):
             duplicate = self._check_duplicate(item)
             if duplicate:
@@ -95,11 +96,14 @@ class Queue:
                     print("New item with dependencies timestamp")
                     task.timestamp = duplicate.timestamp
                     item_dependencies.remove(item)
-                    item_dependencies.append(duplicate)
+                    # item_dependencies.append(duplicate)
+        
+        print("Dependencies END")
         
         return task, item_dependencies
     
     def _remove_duplicate(self, duplicate:TaskSubmission, dependencies: list[TaskSubmission]) -> None:
+        print("Remove duplicate START")
         existing_queue = self._queue
         print(f"Duplicate to remove {duplicate}")
         existing_queue.remove(duplicate)
@@ -110,6 +114,7 @@ class Queue:
                 None
             )
             existing_queue.remove(duplicate_dependency)
+        print("Remove duplicate END")
 
     @staticmethod
     def _priority_for_task(task):
@@ -299,9 +304,3 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
-
-
-
-
-
-
