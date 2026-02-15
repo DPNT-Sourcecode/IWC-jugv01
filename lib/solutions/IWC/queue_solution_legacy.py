@@ -125,10 +125,10 @@ class Queue:
 
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
-        duplicate_item = self._check_duplicate(item)
-        print(f"duplicate exists? {duplicate_item}")
-        if duplicate_item is True:
-            # print("Going to remove the duplicate now")
+        item_duplicated = self._check_duplicate(item)
+        print(f"duplicate exists? {item_duplicated}")
+        if item_duplicated is True:
+            print("Going to remove the duplicate now")
             tasks = self._resolve_duplicates(item)
 
         for task in tasks:
@@ -280,6 +280,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
