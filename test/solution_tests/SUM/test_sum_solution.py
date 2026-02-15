@@ -1,5 +1,4 @@
-import unittest
-
+import pytest
 from lib.solutions.SUM.sum_solution import SumSolution
 
 
@@ -8,5 +7,6 @@ class TestSum():
         assert SumSolution().compute(1, 2) == 3
 
     def test_invalid_sum(self):
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             SumSolution().compute(1, "2")
+
