@@ -95,6 +95,7 @@ class Queue:
                     print("New item with dependencies timestamp")
                     task.timestamp = duplicate.timestamp
                     item_dependencies.remove(item)
+                    item_dependencies.append(duplicate)
         
         return task, item_dependencies
     
@@ -298,6 +299,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
