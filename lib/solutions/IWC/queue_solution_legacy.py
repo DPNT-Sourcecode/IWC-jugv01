@@ -4,7 +4,7 @@ from enum import IntEnum
 
 # LEGACY CODE ASSET
 # RESOLVED on deploy
-from lib.solutions.IWC.task_types import TaskSubmission, TaskDispatch
+from solutions.IWC.task_types import TaskSubmission, TaskDispatch
 
 class Priority(IntEnum):
     """Represents the queue ordering tiers observed in the legacy system."""
@@ -67,20 +67,27 @@ class Queue:
             tasks.append(dependency_task)
         return tasks
     
-    def _remove_duplicates(self, task: TaskSubmission, tasks: list[TaskSubmission]) -> list[TaskSubmission]:
+    def _resolve_duplicates(self, item: TaskSubmission) -> TaskSubmission:
         processed_tasks = set()
         result = []
-
-        tasks.sort(key=lambda x: x["timestamp"], reverse=True)
-
-        for task in tasks:
-            duplication_pair = (task["user_id"], task["provider"])
-
-            if duplication_pair not in processed_tasks:
-                result.append(task)
-                processed_tasks.add(duplication_pair)
+        tasks = self._queue
+        item_identifiers = (item["user_id"], item["provider"])
         
-        return result
+        duplicate = any(
+            task.user_id == item.user_id and task.provider == item.provider
+            for task in tasks
+        )
+
+        if duplicate:
+            old_item_date = duplicate.timestamp
+            new_item_date = item.timestamp
+
+            if old_item_date < new_item_date:
+                return duplicate
+            else: 
+                return item
+
+        return item
                 
 
     @staticmethod
@@ -107,6 +114,7 @@ class Queue:
         return timestamp
 
     def enqueue(self, item: TaskSubmission) -> int:
+        task = self._resolve_duplicates(item)
         tasks = [*self._collect_dependencies(item), item]
 
         for task in tasks:
@@ -258,3 +266,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
