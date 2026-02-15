@@ -98,6 +98,7 @@ class Queue:
                     item_dependencies.remove(item)
                     # item_dependencies.append(duplicate)
         
+        print(f"Updated new task {task}")
         print("Dependencies END")
         
         return task, item_dependencies
@@ -304,3 +305,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
