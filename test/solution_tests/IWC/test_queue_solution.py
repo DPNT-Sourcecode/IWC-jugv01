@@ -99,6 +99,6 @@ def test_resolve_deduplication_flow_replace_old_item_with_dependencies() -> None
         call_size().expect(3),
         call_dequeue().expect("companies_house", 1),
         call_dequeue().expect("credit_check", 1),
-        call_dequeue().expect("companies_house", 1),
+        call_dequeue().expect("bank_statements", 1),
         call_size().expect(0),
     ])

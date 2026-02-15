@@ -80,10 +80,12 @@ class Queue:
         print(f"Duplicate to remove {duplicate}")
         existing_queue.remove(duplicate)
         print(f"Dependencies {dependencies}")
-        for item in existing_queue[:]:
-            print(f"Curr item {item}")
-            if item in dependencies:
-                existing_queue.remove(item)
+        for item in dependencies:
+            duplicate_dependency = next(
+                (task for task in existing_queue if task.user_id == item.user_id and task.provider == item.provider),
+                None
+            )
+            existing_queue.remove(duplicate_dependency)
 
     @staticmethod
     def _priority_for_task(task):
