@@ -2,21 +2,18 @@
 
 from __future__ import annotations
 
-from lib.solutions.IWC.queue_solution_legacy import Queue
-from lib.solutions.IWC.task_types import TaskDispatch, TaskSubmission
+from solutions.IWC.queue_solution_legacy import Queue
+from solutions.IWC.task_types import TaskDispatch, TaskSubmission
 
 class QueueSolutionEntrypoint:
 
     def __init__(self) -> None:
-        print("__init__")
         self._queue: Queue = Queue()
 
     def enqueue(self, task: TaskSubmission) -> int:
-        print("enqueue")
         return self._queue.enqueue(task)
 
     def dequeue(self) -> TaskDispatch | None:
-        print("dequeue")
         return self._queue.dequeue()
 
     def size(self) -> int:
@@ -27,4 +24,5 @@ class QueueSolutionEntrypoint:
 
     def purge(self) -> bool:
         return self._queue.purge()
+
 
