@@ -115,7 +115,8 @@ class Queue:
                 (task for task in existing_queue if task.user_id == item.user_id and task.provider == item.provider),
                 None
             )
-            existing_queue.remove(duplicate_dependency)
+            if duplicate_dependency:
+                existing_queue.remove(duplicate_dependency)
         print("Remove duplicate END")
 
     @staticmethod
@@ -307,6 +308,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
