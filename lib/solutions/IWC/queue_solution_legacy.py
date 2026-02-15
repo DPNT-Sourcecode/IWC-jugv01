@@ -72,8 +72,26 @@ class Queue:
         duplicate = next(
             (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
             None
-        )
+        )        
+        
         return duplicate     
+    
+    def _check_dependencies_duplicate(self, task: TaskSubmission, item_dependencies: list[TaskSubmission]) -> list[TaskSubmission]:
+        for index, item in enumerate(item_dependencies):
+            duplicate = self._check_duplicate(item)
+            if duplicate:
+                print(f"Dependency duplicate {duplicate}")
+                old_item_date = duplicate.timestamp
+                new_item_date = task.timestamp
+
+                if old_item_date > new_item_date:
+                    print("Existing item is older")
+                    item_dependencies[index].timestamp = task.timestamp
+                else:
+                    print("New item is older")
+                    task.timestamp = duplicate.timestamp
+        
+        return task, item_dependencies
     
     def _remove_duplicate(self, duplicate:TaskSubmission, dependencies: list[TaskSubmission]) -> None:
         existing_queue = self._queue
@@ -112,6 +130,7 @@ class Queue:
 
     def enqueue(self, item: TaskSubmission) -> int:
         item_dependencies = self._collect_dependencies(item)
+        item, item_dependencies = self._check_dependencies_duplicate(item, item_dependencies)
         tasks = [*item_dependencies, item]
 
         duplicate = self._check_duplicate(item)
@@ -121,9 +140,9 @@ class Queue:
 
             if old_item_date > new_item_date:
                 self._remove_duplicate(duplicate, item_dependencies)
-
             else:
                 return self.size
+
 
         for task in tasks:
             metadata = task.metadata
@@ -274,3 +293,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
