@@ -127,7 +127,7 @@ class Queue:
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
         if self._check_duplicate:
-            tasks = self._resolve_duplicates
+            tasks = self._resolve_duplicates(item)
 
         for task in tasks:
             metadata = task.metadata
@@ -278,4 +278,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
