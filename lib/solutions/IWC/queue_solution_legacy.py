@@ -70,12 +70,12 @@ class Queue:
     def _resolve_duplicates(self, item: TaskSubmission) -> TaskSubmission:
         tasks = self._queue
         
-        duplicate = any(
-            task.user_id == item.user_id and task.provider == item.provider
-            for task in tasks
+        duplicate = next(
+            (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
+            None
         )
 
-        if duplicate:
+        if duplicate is not None:
             old_item_date = duplicate.timestamp
             new_item_date = item.timestamp
 
@@ -263,4 +263,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
