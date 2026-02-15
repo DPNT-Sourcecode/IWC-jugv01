@@ -74,14 +74,20 @@ class Queue:
             (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
             None
         )
+        print(f"Duplicate {duplicate}")
 
         if duplicate is not None:
             old_item_date = duplicate.timestamp
             new_item_date = item.timestamp
 
+            print(f"Exising timestamp {old_item_date}")
+            print(f"New timestamp {new_item_date}")
+
             if old_item_date < new_item_date:
+                print("Existing is older")
                 return duplicate
             else: 
+                print("New is older")
                 return item
 
         return item
@@ -263,5 +269,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
