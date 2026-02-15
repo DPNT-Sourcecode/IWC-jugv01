@@ -89,8 +89,8 @@ class Queue:
 
                 if old_item_date > new_item_date:
                     print("Updating dependency to new timestamp")
-                    item_dependencies[index].timestamp = task.timestamp
-                    print(f"New dependency {item_dependencies[index]}")
+                    # item_dependencies[index].timestamp = task.timestamp
+                    # print(f"New dependency {item_dependencies[index]}")
                     self._remove_duplicate(duplicate, [])
                 else:
                     print("New item with dependencies timestamp")
@@ -143,7 +143,8 @@ class Queue:
 
     def enqueue(self, item: TaskSubmission) -> int:
         item_dependencies = self._collect_dependencies(item)
-        item, item_dependencies = self._check_dependencies_duplicate(item, item_dependencies)
+        if item_dependencies:
+            item, item_dependencies = self._check_dependencies_duplicate(item, item_dependencies)
         tasks = [*item_dependencies, item]
 
         duplicate = self._check_duplicate(item)
@@ -306,5 +307,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
