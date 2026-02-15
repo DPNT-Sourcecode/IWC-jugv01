@@ -74,6 +74,13 @@ class Queue:
             None
         )
         return duplicate     
+    
+    def _remove_duplicate(self, duplicate:TaskSubmission, dependencies: list[TaskSubmission]) -> None:
+        existing_queue = self._queue
+        existing_queue.remove(duplicate)
+        for item in dependencies:
+            if item in existing_queue:
+                existing_queue.remove(item)
 
     @staticmethod
     def _priority_for_task(task):
@@ -99,16 +106,17 @@ class Queue:
         return timestamp
 
     def enqueue(self, item: TaskSubmission) -> int:
-        tasks = [*self._collect_dependencies(item), item]
+        item_dependencies = self._collect_dependencies(item)
+        tasks = [*item_dependencies, item]
 
         duplicate = self._check_duplicate(item)
         if duplicate:
-            existing_queue = self._queue
             old_item_date = duplicate.timestamp
             new_item_date = item.timestamp
 
             if old_item_date > new_item_date:
-                existing_queue.remove(duplicate)
+                self._remove_duplicate(duplicate, item_dependencies)
+
             else:
                 return self.size
 
@@ -261,3 +269,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
