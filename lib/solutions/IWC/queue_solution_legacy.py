@@ -77,39 +77,39 @@ class Queue:
         return duplicate     
     
     def _check_dependencies_duplicate(self, task: TaskSubmission, item_dependencies: list[TaskSubmission]) -> list[TaskSubmission]:
-        print("Dependencies START")
+        # print("Dependencies START")
         for index, item in enumerate(item_dependencies[:]):
             duplicate = self._check_duplicate(item)
             if duplicate:
-                print(f"Dependency duplicate {duplicate}")
+                # print(f"Dependency duplicate {duplicate}")
                 old_item_date = duplicate.timestamp
-                print(f"Existing item time {old_item_date}")
+                # print(f"Existing item time {old_item_date}")
                 new_item_date = task.timestamp
-                print(f"New item time {new_item_date}")
+                # print(f"New item time {new_item_date}")
 
                 if old_item_date > new_item_date:
-                    print("Updating dependency to new timestamp")
+                    # print("Updating dependency to new timestamp")
                     # item_dependencies[index].timestamp = task.timestamp
                     # print(f"New dependency {item_dependencies[index]}")
                     self._remove_duplicate(duplicate, [])
                 else:
-                    print("New item with dependencies timestamp")
+                    # print("New item with dependencies timestamp")
                     task.timestamp = duplicate.timestamp
                     item_dependencies.remove(item)
                     # item_dependencies.append(duplicate)
         
-        print(f"Updated new task {task}")
-        print(f"Updated new dependencies {item_dependencies}")
-        print("Dependencies END")
+        # print(f"Updated new task {task}")
+        # print(f"Updated new dependencies {item_dependencies}")
+        # print("Dependencies END")
         
         return task, item_dependencies
     
     def _remove_duplicate(self, duplicate:TaskSubmission, dependencies: list[TaskSubmission]) -> None:
-        print("Remove duplicate START")
+        # print("Remove duplicate START")
         existing_queue = self._queue
-        print(f"Duplicate to remove {duplicate}")
+        # print(f"Duplicate to remove {duplicate}")
         existing_queue.remove(duplicate)
-        print(f"Dependencies {dependencies}")
+        # print(f"Dependencies {dependencies}")
         for item in dependencies:
             duplicate_dependency = next(
                 (task for task in existing_queue if task.user_id == item.user_id and task.provider == item.provider),
@@ -117,7 +117,7 @@ class Queue:
             )
             if duplicate_dependency:
                 existing_queue.remove(duplicate_dependency)
-        print("Remove duplicate END")
+        # print("Remove duplicate END")
 
     @staticmethod
     def _priority_for_task(task):
@@ -308,6 +308,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
