@@ -78,7 +78,7 @@ class Queue:
         return duplicate_exists
 
     def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
-        tasks = self._queue
+        # tasks = self._queue
         print("About to get the duplicate value")
         
         # duplicate = next(
@@ -98,7 +98,7 @@ class Queue:
         #         print("New is older")
         #         self._queue.remove(duplicate)
 
-        return self._queue
+        return []
                 
 
     @staticmethod
@@ -281,6 +281,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
