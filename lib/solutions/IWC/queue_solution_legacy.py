@@ -86,9 +86,10 @@ class Queue:
                 new_item_date = task.timestamp
                 print(f"New item time {new_item_date}")
 
-                if old_item_date < new_item_date:
+                if old_item_date > new_item_date:
                     print("Updating dependency to new timestamp")
                     item_dependencies[index].timestamp = task.timestamp
+                    print(f"New dependency {item_dependencies[index]}")
                 else:
                     print("New item with dependencies timestamp")
                     task.timestamp = duplicate.timestamp
@@ -295,5 +296,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
