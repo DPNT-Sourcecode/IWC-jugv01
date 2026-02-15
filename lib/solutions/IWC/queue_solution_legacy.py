@@ -4,7 +4,7 @@ from enum import IntEnum
 
 # LEGACY CODE ASSET
 # RESOLVED on deploy
-from solutions.IWC.task_types import TaskSubmission, TaskDispatch
+from lib.solutions.IWC.task_types import TaskSubmission, TaskDispatch
 
 class Priority(IntEnum):
     """Represents the queue ordering tiers observed in the legacy system."""
@@ -68,10 +68,7 @@ class Queue:
         return tasks
     
     def _resolve_duplicates(self, item: TaskSubmission) -> TaskSubmission:
-        processed_tasks = set()
-        result = []
         tasks = self._queue
-        item_identifiers = (item["user_id"], item["provider"])
         
         duplicate = any(
             task.user_id == item.user_id and task.provider == item.provider
@@ -266,3 +263,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
