@@ -9,4 +9,3 @@ class TestSum():
     def test_invalid_sum(self):
         with pytest.raises(TypeError):
             SumSolution().compute(1, "2")
-
