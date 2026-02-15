@@ -78,23 +78,24 @@ class Queue:
 
     def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
         tasks = self._queue
+        print("About to get the duplicate value")
         
-        duplicate = next(
-            (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
-            None
-        )
-        print(f"Duplicate {duplicate}")
+        # duplicate = next(
+        #     (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
+        #     None
+        # )
+        # print(f"Duplicate {duplicate}")
 
-        if duplicate is not None:
-            old_item_date = duplicate.timestamp
-            new_item_date = item.timestamp
+        # if duplicate is not None:
+        #     old_item_date = duplicate.timestamp
+        #     new_item_date = item.timestamp
 
-            print(f"Exising timestamp {old_item_date}")
-            print(f"New timestamp {new_item_date}")
+        #     print(f"Exising timestamp {old_item_date}")
+        #     print(f"New timestamp {new_item_date}")
 
-            if old_item_date > new_item_date:
-                print("New is older")
-                self._queue.remove(duplicate)
+        #     if old_item_date > new_item_date:
+        #         print("New is older")
+        #         self._queue.remove(duplicate)
 
         return self._queue
                 
@@ -127,8 +128,8 @@ class Queue:
         duplicate_item = self._check_duplicate(item)
         print(f"duplicate exists? {duplicate_item}")
         if duplicate_item is True:
-            print("Going to remove the duplicate now")
-        #     tasks = self._resolve_duplicates(item)
+            # print("Going to remove the duplicate now")
+            tasks = self._resolve_duplicates(item)
 
         for task in tasks:
             metadata = task.metadata
@@ -279,6 +280,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
