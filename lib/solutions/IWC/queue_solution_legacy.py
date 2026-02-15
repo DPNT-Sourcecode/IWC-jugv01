@@ -69,12 +69,12 @@ class Queue:
     
     def _check_duplicate(self, item:TaskSubmission) -> bool:
         tasks = self._queue
-        duplicate = any(
+        duplicate_exists = any(
             task.user_id == item.user_id and task.provider == item.provider
             for task in tasks
         )
-        print(f"Duplicate {duplicate}")
-        return duplicate
+        print(f"Duplicate exists {duplicate_exists}")
+        return duplicate_exists
 
     def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
         tasks = self._queue
@@ -84,8 +84,6 @@ class Queue:
             None
         )
         print(f"Duplicate {duplicate}")
-
-        keeper = None
 
         if duplicate is not None:
             old_item_date = duplicate.timestamp
@@ -126,7 +124,8 @@ class Queue:
 
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
-        if self._check_duplicate:
+        duplicate_item = self._check_duplicate(item)
+        if duplicate_item is True:
             tasks = self._resolve_duplicates(item)
 
         for task in tasks:
@@ -278,5 +277,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
