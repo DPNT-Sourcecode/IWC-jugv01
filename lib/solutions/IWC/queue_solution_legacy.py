@@ -77,9 +77,12 @@ class Queue:
     
     def _remove_duplicate(self, duplicate:TaskSubmission, dependencies: list[TaskSubmission]) -> None:
         existing_queue = self._queue
+        print(f"Duplicate to remove {duplicate}")
         existing_queue.remove(duplicate)
-        for item in dependencies:
-            if item in existing_queue:
+        print(f"Dependencies {dependencies}")
+        for item in existing_queue[:]:
+            print(f"Curr item {item}")
+            if item in dependencies:
                 existing_queue.remove(item)
 
     @staticmethod
@@ -269,4 +272,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
