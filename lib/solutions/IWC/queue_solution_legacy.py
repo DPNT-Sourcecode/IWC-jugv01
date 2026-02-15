@@ -68,14 +68,14 @@ class Queue:
             tasks.append(dependency_task)
         return tasks
     
-    def _check_duplicate(self, item:TaskSubmission) -> bool:
+    def _check_duplicate(self, item:TaskSubmission) -> TaskSubmission:
         tasks = self._queue
-        duplicate_exists = any(
-            task.user_id == item.user_id and task.provider == item.provider
-            for task in tasks
+        duplicate = next(
+            (task for task in tasks if task.user_id == item.user_id and task.provider == item.provider),
+            None
         )
-        print(f"Duplicate exists {duplicate_exists}")
-        return duplicate_exists
+        print(f"Duplicate {duplicate}")
+        return duplicate
 
     def _resolve_duplicates(self, item: TaskSubmission) -> list[TaskSubmission]:
         tasks = [x for x in self._queue]
@@ -126,11 +126,22 @@ class Queue:
 
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
-        item_duplicated = self._check_duplicate(item)
-        print(f"duplicate exists? {item_duplicated}")
-        if item_duplicated is True:
+
+        duplicate = self._check_duplicate(item)
+        if duplicate:
+            existing_queue = self._queue
             print("Going to remove the duplicate now")
-            tasks = self._resolve_duplicates(item)
+            old_item_date = duplicate.timestamp
+            new_item_date = item.timestamp
+
+            print(f"Exising timestamp {old_item_date}")
+            print(f"New timestamp {new_item_date}")
+
+            if old_item_date > new_item_date:
+                print("New is older")
+                existing_queue.remove(duplicate)
+            else:
+                return self.size
 
         for task in tasks:
             metadata = task.metadata
@@ -281,3 +292,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
