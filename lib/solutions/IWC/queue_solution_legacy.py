@@ -66,6 +66,22 @@ class Queue:
             tasks.extend(self._collect_dependencies(dependency_task))
             tasks.append(dependency_task)
         return tasks
+    
+    def _remove_duplicates(self, task: TaskSubmission, tasks: list[TaskSubmission]) -> list[TaskSubmission]:
+        processed_tasks = set()
+        result = []
+
+        tasks.sort(key=lambda x: x["timestamp"], reverse=True)
+
+        for task in tasks:
+            duplication_pair = (task["user_id"], task["provider"])
+
+            if duplication_pair not in processed_tasks:
+                result.append(task)
+                processed_tasks.add(duplication_pair)
+        
+        return result
+                
 
     @staticmethod
     def _priority_for_task(task):
@@ -242,3 +258,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
